@@ -13,7 +13,10 @@ RUN apt-get -y update && \
 	apt-get -y clean && \
 	rm -rf /var/lib/apt
 
+#Workaround
+RUN sed -ie 's/$DAEMON -D/$DAEMON --no-chroot -D/g' /etc/init.d/avahi-daemon
 RUN sed -ie 's/getaddrinfo()/getaddrinfo({families:[4]})/' node_modules/mdns/lib/browser.js
+RUN sed -ie "s/TKK=eval.*?;/TKK='[0-9]+.[0-9]+'/g" /work/node_modules/google-tts-api/lib/key.js
 
 COPY index.js /work/index.js
 COPY exec.sh /work/exec.sh
